@@ -58,6 +58,15 @@ const commands = [
     headers: { 'Authorization': `Bot ${TOKEN}`, 'Content-Type': 'application/json' },
     body: JSON.stringify(commands),
   });
-  console.log(r.status, await r.text());
+  console.log('guild:', r.status, await r.text());
   if (!r.ok) process.exit(1);
+
+  // Remove any previously-registered global commands (DM support stripped)
+  const gUrl = `https://discord.com/api/v10/applications/${APP_ID}/commands`;
+  const g = await fetch(gUrl, {
+    method: 'PUT',
+    headers: { 'Authorization': `Bot ${TOKEN}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify([]),
+  });
+  console.log('global cleared:', g.status, await g.text());
 })();
