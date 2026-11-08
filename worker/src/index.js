@@ -1,3 +1,11 @@
+/**
+ * Jarvis voice assistant Discord bot worker.
+ *
+ * Receives Discord interaction events, verifies their Ed25519 signature
+ * against DISCORD_PUBLIC_KEY, and routes slash commands (task, model, status,
+ * stop, call) to GitHub Actions workflow dispatches via the GitHub API.
+ * Only the owner (OWNER_ID) may trigger commands.
+ */
 import nacl from 'tweetnacl';
 
 const OWNER_ID = '1270343449643843736';
