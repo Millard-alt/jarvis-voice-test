@@ -1,3 +1,8 @@
+/**
+ * jarvis-voice worker — handles Discord slash-command interactions.
+ * Verifies Discord request signatures, then dispatches GitHub Actions workflows
+ * for commands such as task, model, status, stop, and call.
+ */
 import nacl from 'tweetnacl';
 
 const OWNER_ID = '1270343449643843736';
