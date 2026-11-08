@@ -59,13 +59,20 @@ jobs:
           git commit -m "jarvis: ${{ inputs.task }}"
           git push origin "$BRANCH"
           # Create PR via GitHub REST API (works without 'gh' CLI)
-          PR_RESPONSE=$(curl -s -X POST "https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls" \
+          PR_RESPONSE=$(curl -s -w "\n%{http_code}" -X POST "https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls" \
             -H "Authorization: Bearer ${GITHUB_TOKEN}" \
             -H "Accept: application/vnd.github+json" \
             -H "X-GitHub-Api-Version: 2026-03-10" \
             -d "{\"title\":\"jarvis: ${{ inputs.task }}\",\"head\":\"${BRANCH}\",\"base\":\"main\",\"body\":\"Automated change by Jarvis.\"}")
-          PR_URL=$(echo "$PR_RESPONSE" | node -e 'let d="";process.stdin.on("data",c=>d+=c);process.stdin.on("end",()=>{try{console.log(JSON.parse(d).html_url)}catch(e){console.error("PR create failed:",d);process.exit(1)}})')
-          echo "PR_URL=$PR_URL" >> $GITHUB_ENV
+          HTTP_CODE=$(echo "$PR_RESPONSE" | tail -n1)
+          PR_BODY=$(echo "$PR_RESPONSE" | sed '$d')
+          if [ "$HTTP_CODE" = "201" ]; then
+            PR_URL=$(echo "$PR_BODY" | grep -o '"html_url": "[^"]*' | sed 's/"html_url": "//')
+            echo "PR_URL=$PR_URL" >> $GITHUB_ENV
+          else
+            echo "PR create failed (HTTP $HTTP_CODE): $PR_BODY" >&2
+            echo "PR_URL=" >> $GITHUB_ENV
+          fi
 
       - name: Report back to Discord
         if: always()
