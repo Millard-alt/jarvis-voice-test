@@ -11,7 +11,7 @@ on:
         description: 'Model (provider/model)'
         required: false
         type: string
-        default: 'google/gemini-2.5-flash'
+        default: 'openrouter/google/gemma-4-31b-it:free'
       channel_id:
         description: 'Discord channel to report to'
         required: false
@@ -51,9 +51,7 @@ jobs:
       - name: Run OpenCode
         timeout-minutes: 12
         env:
-          GOOGLE_GENERATIVE_AI_API_KEY: ${{ secrets.GOOGLE_GENERATIVE_AI_API_KEY }}
-          GOOGLE_API_KEY: ${{ secrets.GOOGLE_GENERATIVE_AI_API_KEY }}
-          GEMINI_API_KEY: ${{ secrets.GOOGLE_GENERATIVE_AI_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
           CI: "true"
@@ -73,7 +71,7 @@ jobs:
           echo "Starting opencode..." > /tmp/opencode.log
           node scripts/log-watcher.js &
           WATCHER_PID=$!
-          timeout -k 30 540 opencode run --auto --model "${{ inputs.model || 'google/gemini-2.5-flash' }}" "${{ github.event.inputs.task }}" >> /tmp/opencode.log 2>&1
+          timeout -k 30 540 opencode run --auto --model "${{ inputs.model || 'openrouter/google/gemma-4-31b-it:free' }}" "${{ github.event.inputs.task }}" >> /tmp/opencode.log 2>&1
           OPENCODE_EXIT=$?
           touch /tmp/opencode.done
           wait $WATCHER_PID

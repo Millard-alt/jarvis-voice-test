@@ -28,7 +28,7 @@ jobs:
           CI: "true"
           FORCE_COLOR: "0"
           NO_COLOR: "1"
-          GOOGLE_GENERATIVE_AI_API_KEY: ${{ secrets.GOOGLE_GENERATIVE_AI_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
         run: |
           export PATH="$HOME/.opencode/bin:$PATH"
           
@@ -38,8 +38,8 @@ jobs:
             TASK_PROMPT="Add a test comment to verify non-interactive execution"
           fi
 
-          # Run non-interactively using Google Gemini (free tier) and plain text output
-          opencode run --model "google/gemini-2.5-flash" --auto "$TASK_PROMPT"
+          # Run non-interactively using OpenRouter (free tier) and plain text output
+          opencode run --model "openrouter/google/gemma-4-31b-it:free" --auto "$TASK_PROMPT"
 
       - name: Create branch and PR
         env:
