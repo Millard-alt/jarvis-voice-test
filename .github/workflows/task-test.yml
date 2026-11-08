@@ -12,6 +12,11 @@ on:
         required: false
         type: string
         default: ''
+      channel_id:
+        description: 'Channel to post the report to (empty = DM)'
+        required: false
+        type: string
+        default: ''
 
 jobs:
   task:
@@ -24,25 +29,30 @@ jobs:
           USER_ID: '1270343449643843736'
           PROMPT: ${{ inputs.prompt }}
           MODEL: ${{ inputs.model }}
+          CHANNEL_ID: ${{ inputs.channel_id }}
         run: |
           node -e '
           const token = process.env.DISCORD_TOKEN;
           const userId = process.env.USER_ID;
           (async () => {
-            const r = await fetch("https://discord.com/api/v10/users/@me/channels", {
-              method: "POST",
-              headers: { "Authorization": "Bot " + token, "Content-Type": "application/json" },
-              body: JSON.stringify({ recipient_id: userId }),
-            });
-            if (!r.ok) { console.error("DM channel failed", r.status); process.exit(1); }
-            const ch = await r.json();
+            let channelId = process.env.CHANNEL_ID;
+            if (!channelId) {
+              const r = await fetch("https://discord.com/api/v10/users/@me/channels", {
+                method: "POST",
+                headers: { "Authorization": "Bot " + token, "Content-Type": "application/json" },
+                body: JSON.stringify({ recipient_id: userId }),
+              });
+              if (!r.ok) { console.error("DM channel failed", r.status); process.exit(1); }
+              const ch = await r.json();
+              channelId = ch.id;
+            }
             const msg = "Task completed (stub).\nPrompt: " + process.env.PROMPT + "\nModel: " + (process.env.MODEL || "(default)") + "\nPR: https://example.com/pr/0";
-            const m = await fetch("https://discord.com/api/v10/channels/" + ch.id + "/messages", {
+            const m = await fetch("https://discord.com/api/v10/channels/" + channelId + "/messages", {
               method: "POST",
               headers: { "Authorization": "Bot " + token, "Content-Type": "application/json" },
               body: JSON.stringify({ content: msg }),
             });
-            if (!m.ok) { console.error("DM send failed", m.status, await m.text()); process.exit(1); }
-            console.log("DM sent");
+            if (!m.ok) { console.error("message send failed", m.status, await m.text()); process.exit(1); }
+            console.log("Message sent to channel " + channelId);
           })().catch(e => { console.error(e); process.exit(1); });
           '

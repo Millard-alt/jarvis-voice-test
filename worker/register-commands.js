@@ -52,12 +52,22 @@ const commands = [
 ];
 
 (async () => {
-  const url = `https://discord.com/api/v10/applications/${APP_ID}/guilds/${GUILD_ID}/commands`;
-  const r = await fetch(url, {
+  // Guild commands (instant in the server)
+  const guildUrl = `https://discord.com/api/v10/applications/${APP_ID}/guilds/${GUILD_ID}/commands`;
+  const r1 = await fetch(guildUrl, {
     method: 'PUT',
     headers: { 'Authorization': `Bot ${TOKEN}`, 'Content-Type': 'application/json' },
     body: JSON.stringify(commands),
   });
-  console.log(r.status, await r.text());
-  if (!r.ok) process.exit(1);
+  console.log('guild:', r1.status, await r1.text());
+
+  // Global commands (available in DMs; may take up to 1 hour to propagate)
+  const globalUrl = `https://discord.com/api/v10/applications/${APP_ID}/commands`;
+  const r2 = await fetch(globalUrl, {
+    method: 'PUT',
+    headers: { 'Authorization': `Bot ${TOKEN}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify(commands),
+  });
+  console.log('global:', r2.status, await r2.text());
+  if (!r1.ok && !r2.ok) process.exit(1);
 })();
