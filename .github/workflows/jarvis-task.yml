@@ -1,0 +1,85 @@
+name: jarvis-task
+
+on:
+  workflow_dispatch:
+    inputs:
+      task:
+        description: 'Task prompt'
+        required: true
+        type: string
+
+jobs:
+  jarvis:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install OpenCode
+        run: curl -fsSL https://opencode.ai/v2/install | bash
+
+      - name: Run OpenCode (headless)
+        timeout-minutes: 10
+        env:
+          CI: "true"
+          PATH: "$HOME/.opencode/bin:$PATH"
+          GOOGLE_GENERATIVE_AI_API_KEY: ${{ secrets.GOOGLE_GENERATIVE_AI_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          export PATH="$HOME/.opencode/bin:$PATH"
+          opencode run "${{ inputs.task }}" --non-interactive
+
+      - name: Create branch and PR
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          BRANCH="jarvis/task-${{ github.run_id }}"
+          git checkout -b "$BRANCH"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+            echo "PR_URL=" >> $GITHUB_ENV
+            exit 0
+          fi
+          git commit -m "jarvis: ${{ inputs.task }}"
+          git push origin "$BRANCH"
+          PR_URL=$(gh pr create --title "jarvis: ${{ inputs.task }}" --body "Automated change by Jarvis." --head "$BRANCH" --base main)
+          echo "PR_URL=$PR_URL" >> $GITHUB_ENV
+
+      - name: Report back to Discord
+        if: always()
+        env:
+          DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_TOKEN }}
+          USER_ID: "1270343449643843736"
+          TASK: ${{ inputs.task }}
+          PR_URL: ${{ env.PR_URL }}
+          JOB_STATUS: ${{ job.status }}
+        run: |
+          node -e '
+          const token = process.env.DISCORD_BOT_TOKEN;
+          const userId = process.env.USER_ID;
+          (async () => {
+            const r = await fetch("https://discord.com/api/v10/users/@me/channels", {
+              method: "POST",
+              headers: { "Authorization": "Bot " + token, "Content-Type": "application/json" },
+              body: JSON.stringify({ recipient_id: userId }),
+            });
+            if (!r.ok) { console.error("DM channel failed", r.status, await r.text()); process.exit(1); }
+            const ch = await r.json();
+            const pr = process.env.PR_URL || "(no PR created)";
+            const msg = "Task finished.\nPrompt: " + process.env.TASK + "\nStatus: " + process.env.JOB_STATUS + "\nPR: " + pr;
+            const m = await fetch("https://discord.com/api/v10/channels/" + ch.id + "/messages", {
+              method: "POST",
+              headers: { "Authorization": "Bot " + token, "Content-Type": "application/json" },
+              body: JSON.stringify({ content: msg }),
+            });
+            if (!m.ok) { console.error("message send failed", m.status, await m.text()); process.exit(1); }
+            console.log("Report sent to DM.");
+          })().catch(e => { console.error(e); process.exit(1); });
+          '

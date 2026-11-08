@@ -2,10 +2,8 @@
 // Run once: node register-commands.js (with .env filled)
 // Requires DISCORD_TOKEN (bot token) and DISCORD_APP_ID and GUILD_ID.
 
-require('dotenv').config?.();
 const fs = require('node:fs');
 const path = require('node:path');
-// minimal .env loader
 const envPath = path.join(__dirname, '..', '.env');
 if (fs.existsSync(envPath)) {
   for (const line of fs.readFileSync(envPath, 'utf8').split(/\r?\n/)) {
@@ -32,23 +30,6 @@ const commands = [
     description: 'Start a coding task',
     options: [{ name: 'prompt', description: 'What to do', type: 3, required: true }],
   },
-  {
-    name: 'model',
-    description: 'Choose the model',
-    options: [{ name: 'name', description: 'Model name', type: 3, required: true }],
-  },
-  {
-    name: 'status',
-    description: 'Show last task status',
-  },
-  {
-    name: 'stop',
-    description: 'Cancel the running task',
-  },
-  {
-    name: 'call',
-    description: 'Start a voice call',
-  },
 ];
 
 (async () => {
@@ -60,13 +41,4 @@ const commands = [
   });
   console.log('guild:', r.status, await r.text());
   if (!r.ok) process.exit(1);
-
-  // Remove any previously-registered global commands (DM support stripped)
-  const gUrl = `https://discord.com/api/v10/applications/${APP_ID}/commands`;
-  const g = await fetch(gUrl, {
-    method: 'PUT',
-    headers: { 'Authorization': `Bot ${TOKEN}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify([]),
-  });
-  console.log('global cleared:', g.status, await g.text());
 })();

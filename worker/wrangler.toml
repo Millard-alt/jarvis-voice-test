@@ -7,6 +7,6 @@ binding = "JARVIS_KV"
 id = "20f20af4a3b7447492419bdf0b7f9278"
 [vars]
 TASK_REPO = "Millard-alt/jarvis-voice-test"
-TASK_WORKFLOW = "opencode-task.yml"
+TASK_WORKFLOW = "jarvis-task.yml"
 VOICE_REPO = "Millard-alt/jarvis-voice-test"
 VOICE_WORKFLOW = "voice-test.yml"

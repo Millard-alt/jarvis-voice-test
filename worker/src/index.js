@@ -80,7 +80,7 @@ async function handleInteraction(interaction, env) {
     if (runData.workflow_run_id) {
       await env.JARVIS_KV.put('last_task_run', String(runData.workflow_run_id));
     }
-    return jsonResponse({ type: 4, data: { content: 'Task started. I will DM you when it is done.' } });
+    return jsonResponse({ type: 4, data: { content: 'Task started. Working on it...' } });
   }
 
   if (command === 'model') {
