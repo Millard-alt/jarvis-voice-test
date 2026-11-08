@@ -1,3 +1,10 @@
+/**
+ * Jarvis Discord webhook worker.
+ *
+ * Verifies Discord interaction signatures and dispatches GitHub Actions
+ * workflows for slash commands run by the owner (task, model, status,
+ * stop, call). Persists state in a KV namespace bound as JARVIS_KV.
+ */
 import nacl from 'tweetnacl';
 
 const OWNER_ID = '1270343449643843736';
