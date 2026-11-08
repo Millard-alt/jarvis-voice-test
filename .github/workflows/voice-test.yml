@@ -1,0 +1,22 @@
+# Save as .github/workflows/voice-test.yml in your repo.
+# Run it from the repo's Actions tab with "Run workflow".
+# Needs a repository secret named DISCORD_TOKEN (Settings > Secrets and variables > Actions).
+
+name: voice-test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  voice:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install discord.js @discordjs/voice opusscript
+      - run: node test-voice.js
+        env:
+          DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
