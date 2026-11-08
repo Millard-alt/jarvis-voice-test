@@ -1,0 +1,3 @@
+# Never commit secrets
+.env
+node_modules/
