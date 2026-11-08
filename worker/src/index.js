@@ -1,3 +1,15 @@
+/**
+ * Jarvis Discord worker.
+ *
+ * Receives Discord slash-command interactions (verified via Ed25519 signature)
+ * and maps them to GitHub Actions workflow dispatches / KV state:
+ *   - task     : dispatches the TASK_WORKFLOW with a prompt input (30s rate limit)
+ *   - model    : stores the selected model name in JARVIS_KV
+ *   - status   : reports the last task run's status/conclusion
+ *   - stop     : cancels the last task run
+ *   - call     : dispatches the VOICE_WORKFLOW to start a voice call
+ * Only the configured OWNER_ID may invoke commands; ping (type 1) is answered with a pong.
+ */
 import nacl from 'tweetnacl';
 
 const OWNER_ID = '1270343449643843736';
