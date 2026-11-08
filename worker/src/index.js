@@ -68,7 +68,7 @@ async function handleInteraction(interaction, env) {
           'X-GitHub-Api-Version': '2026-03-10',
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ ref: 'main', inputs: { prompt, model, channel_id: interaction.channel_id || '' } }),
+        body: JSON.stringify({ ref: 'main', inputs: { task: prompt, model, channel_id: interaction.channel_id || '' } }),
       }
     );
     if (!ghResp.ok) {

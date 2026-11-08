@@ -3,7 +3,7 @@ name: opencode-task
 on:
   workflow_dispatch:
     inputs:
-      prompt:
+      task:
         description: 'Task prompt'
         required: true
         type: string
@@ -71,7 +71,7 @@ jobs:
           echo "Starting opencode..." > /tmp/opencode.log
           node scripts/log-watcher.js &
           WATCHER_PID=$!
-          timeout -k 30 540 opencode run --auto --model "${{ inputs.model || 'google/gemini-3.8-flash' }}" "${{ inputs.prompt }}" >> /tmp/opencode.log 2>&1
+          timeout -k 30 540 opencode run --auto --model "${{ inputs.model || 'google/gemini-3.8-flash' }}" "${{ github.event.inputs.task }}" >> /tmp/opencode.log 2>&1
           OPENCODE_EXIT=$?
           touch /tmp/opencode.done
           wait $WATCHER_PID
@@ -91,9 +91,9 @@ jobs:
             echo "NO_PR=true" >> $GITHUB_ENV
             exit 0
           fi
-          git commit -m "opencode: ${{ inputs.prompt }}"
+          git commit -m "opencode: ${{ inputs.task }}"
           git push origin "$BRANCH"
-          PR_URL=$(gh pr create --title "opencode: ${{ inputs.prompt }}" --body "Automated change by opencode." --head "$BRANCH" --base main)
+          PR_URL=$(gh pr create --title "opencode: ${{ inputs.task }}" --body "Automated change by opencode." --head "$BRANCH" --base main)
           echo "PR_URL=$PR_URL" >> $GITHUB_ENV
 
       - name: Report to Discord
@@ -102,12 +102,12 @@ jobs:
           DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
           CHANNEL_ID: ${{ inputs.channel_id }}
           PR_URL: ${{ env.PR_URL }}
-          PROMPT: ${{ inputs.prompt }}
+          TASK: ${{ inputs.task }}
         run: |
           node -e '
           const token=process.env.DISCORD_TOKEN; const ch=process.env.CHANNEL_ID;
           const pr=process.env.PR_URL || "(no PR created)";
-          const msg="Task finished.\nPrompt: "+process.env.PROMPT+"\nPR: "+pr;
+          const msg="Task finished.\nPrompt: "+process.env.TASK+"\nPR: "+pr;
           fetch("https://discord.com/api/v10/channels/"+ch+"/messages",{method:"POST",headers:{"Authorization":"Bot "+token,"Content-Type":"application/json"},body:JSON.stringify({content:msg})})
           .then(r=>r.ok?console.log("report sent"):console.error("report failed",r.status))
           .catch(e=>console.error(e));
