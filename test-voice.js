@@ -229,6 +229,7 @@ async function start() {
   client.on('voiceStateUpdate', (oldState, newState) => {
     // Bot itself: kicked / moved / left.
     if (newState.id === client.user.id) {
+      if (cleaned) return;
       const wasInChannel = oldState.channelId === CHANNEL_ID;
       const nowInChannel = newState.channelId === CHANNEL_ID;
       if (wasInChannel && !nowInChannel) {
