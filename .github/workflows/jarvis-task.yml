@@ -28,7 +28,6 @@ jobs:
           CI: "true"
           FORCE_COLOR: "0"
           NO_COLOR: "1"
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           export PATH="$HOME/.opencode/bin:$PATH"
           
@@ -38,8 +37,8 @@ jobs:
             TASK_PROMPT="Add a test comment to verify non-interactive execution"
           fi
 
-          # Run non-interactively using GitHub Models (free with GITHUB_TOKEN) and plain text output
-          opencode run --model "github/gpt-4o-mini" --auto "$TASK_PROMPT"
+          # Run non-interactively using OpenCode free model and plain text output
+          opencode run --model "opencode/beam-free" --auto "$TASK_PROMPT"
 
       - name: Create branch and PR
         env:
