@@ -53,7 +53,7 @@ jobs:
           git add -A
           if git diff --cached --quiet; then
             echo "No changes to commit."
-            echo "PR_URL=" >> $GITHUB_ENV
+            echo "" > /tmp/jarvis_pr_url
             exit 0
           fi
           git commit -m "jarvis: ${{ inputs.task }}"
@@ -68,10 +68,10 @@ jobs:
           PR_BODY=$(echo "$PR_RESPONSE" | sed '$d')
           if [ "$HTTP_CODE" = "201" ]; then
             PR_URL=$(echo "$PR_BODY" | grep -o '"html_url": "[^"]*' | sed 's/"html_url": "//')
-            echo "PR_URL=$PR_URL" >> $GITHUB_ENV
+            echo "$PR_URL" > /tmp/jarvis_pr_url
           else
             echo "PR create failed (HTTP $HTTP_CODE): $PR_BODY" >&2
-            echo "PR_URL=" >> $GITHUB_ENV
+            echo "" > /tmp/jarvis_pr_url
           fi
 
       - name: Report back to Discord
@@ -80,12 +80,13 @@ jobs:
           DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_TOKEN }}
           USER_ID: "1270343449643843736"
           TASK: ${{ inputs.task }}
-          PR_URL: ${{ env.PR_URL }}
           JOB_STATUS: ${{ job.status }}
         run: |
+          PR_URL=$(cat /tmp/jarvis_pr_url 2>/dev/null || echo "")
           node -e '
           const token = process.env.DISCORD_BOT_TOKEN;
           const userId = process.env.USER_ID;
+          const pr = process.argv[1] || "(no PR created)";
           (async () => {
             const r = await fetch("https://discord.com/api/v10/users/@me/channels", {
               method: "POST",
@@ -94,7 +95,6 @@ jobs:
             });
             if (!r.ok) { console.error("DM channel failed", r.status, await r.text()); process.exit(1); }
             const ch = await r.json();
-            const pr = process.env.PR_URL || "(no PR created)";
             const msg = "Task finished.\nPrompt: " + process.env.TASK + "\nStatus: " + process.env.JOB_STATUS + "\nPR: " + pr;
             const m = await fetch("https://discord.com/api/v10/channels/" + ch.id + "/messages", {
               method: "POST",
@@ -104,4 +104,4 @@ jobs:
             if (!m.ok) { console.error("message send failed", m.status, await m.text()); process.exit(1); }
             console.log("Report sent to DM.");
           })().catch(e => { console.error(e); process.exit(1); });
-          '
+          ' "$PR_URL"

@@ -89,7 +89,7 @@ jobs:
           git add -A
           if git diff --cached --quiet; then
             echo "No changes to commit."
-            echo "NO_PR=true" >> $GITHUB_ENV
+            echo "" > /tmp/opencode_pr_url
             exit 0
           fi
           git commit -m "opencode: ${{ inputs.task }}"
@@ -104,10 +104,10 @@ jobs:
           PR_BODY=$(echo "$PR_RESPONSE" | sed '$d')
           if [ "$HTTP_CODE" = "201" ]; then
             PR_URL=$(echo "$PR_BODY" | grep -o '"html_url": "[^"]*' | sed 's/"html_url": "//')
-            echo "PR_URL=$PR_URL" >> $GITHUB_ENV
+            echo "$PR_URL" > /tmp/opencode_pr_url
           else
             echo "PR create failed (HTTP $HTTP_CODE): $PR_BODY" >&2
-            echo "PR_URL=" >> $GITHUB_ENV
+            echo "" > /tmp/opencode_pr_url
           fi
 
       - name: Report to Discord
@@ -115,17 +115,17 @@ jobs:
         env:
           DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
           CHANNEL_ID: ${{ inputs.channel_id }}
-          PR_URL: ${{ env.PR_URL }}
           TASK: ${{ inputs.task }}
         run: |
+          PR_URL=$(cat /tmp/opencode_pr_url 2>/dev/null || echo "")
           node -e '
           const token=process.env.DISCORD_TOKEN; const ch=process.env.CHANNEL_ID;
-          const pr=process.env.PR_URL || "(no PR created)";
+          const pr = process.argv[1] || "(no PR created)";
           const msg="Task finished.\nPrompt: "+process.env.TASK+"\nPR: "+pr;
           fetch("https://discord.com/api/v10/channels/"+ch+"/messages",{method:"POST",headers:{"Authorization":"Bot "+token,"Content-Type":"application/json"},body:JSON.stringify({content:msg})})
           .then(r=>r.ok?console.log("report sent"):console.error("report failed",r.status))
           .catch(e=>console.error(e));
-          '
+          ' "$PR_URL"
 
       - name: Post AI response
         if: ${{ always() && inputs.channel_id != '' }}
