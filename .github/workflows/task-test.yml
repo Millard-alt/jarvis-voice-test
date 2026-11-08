@@ -1,0 +1,48 @@
+name: task-test
+
+on:
+  workflow_dispatch:
+    inputs:
+      prompt:
+        description: 'Task prompt'
+        required: true
+        type: string
+      model:
+        description: 'Model to use'
+        required: false
+        type: string
+        default: ''
+
+jobs:
+  task:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Send DM to owner
+        env:
+          DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
+          USER_ID: '1270343449643843736'
+          PROMPT: ${{ inputs.prompt }}
+          MODEL: ${{ inputs.model }}
+        run: |
+          node -e '
+          const token = process.env.DISCORD_TOKEN;
+          const userId = process.env.USER_ID;
+          (async () => {
+            const r = await fetch("https://discord.com/api/v10/users/@me/channels", {
+              method: "POST",
+              headers: { "Authorization": "Bot " + token, "Content-Type": "application/json" },
+              body: JSON.stringify({ recipient_id: userId }),
+            });
+            if (!r.ok) { console.error("DM channel failed", r.status); process.exit(1); }
+            const ch = await r.json();
+            const msg = "Task completed (stub).\nPrompt: " + process.env.PROMPT + "\nModel: " + (process.env.MODEL || "(default)") + "\nPR: https://example.com/pr/0";
+            const m = await fetch("https://discord.com/api/v10/channels/" + ch.id + "/messages", {
+              method: "POST",
+              headers: { "Authorization": "Bot " + token, "Content-Type": "application/json" },
+              body: JSON.stringify({ content: msg }),
+            });
+            if (!m.ok) { console.error("DM send failed", m.status, await m.text()); process.exit(1); }
+            console.log("DM sent");
+          })().catch(e => { console.error(e); process.exit(1); });
+          '

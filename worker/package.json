@@ -1,0 +1,16 @@
+{
+  "name": "jarvis-worker",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "dev": "wrangler dev",
+    "register": "node register-commands.js"
+  },
+  "dependencies": {
+    "tweetnacl": "^1.0.3"
+  },
+  "devDependencies": {
+    "wrangler": "^3.99.0"
+  }
+}

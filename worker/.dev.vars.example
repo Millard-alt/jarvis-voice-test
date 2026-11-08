@@ -1,0 +1,8 @@
+# Copy to .dev.vars for local wrangler dev (never commit .dev.vars)
+DISCORD_PUBLIC_KEY=
+GITHUB_TOKEN=
+TASK_REPO=Millard-alt/jarvis-voice-test
+TASK_WORKFLOW=task-test.yml
+VOICE_REPO=Millard-alt/jarvis-voice-test
+VOICE_WORKFLOW=voice-test.yml
+JARVIS_KV=REPLACE_WITH_KV_NAMESPACE_ID

@@ -1,3 +1,4 @@
 # Never commit secrets
 .env
+.dev.vars
 node_modules/
