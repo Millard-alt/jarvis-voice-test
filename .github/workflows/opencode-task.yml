@@ -58,67 +58,13 @@ jobs:
           OPENCODE_PERMISSION: '{"permissions":[{"action":"read","resource":"*.env","effect":"deny"},{"action":"read","resource":"*.env.*","effect":"deny"},{"action":"shell","resource":"git push *","effect":"deny"}]}'
         run: |
           export PATH="$HOME/.opencode/bin:$PATH"
-          # Start a background watcher that streams new log lines to #logs
-          cat > /tmp/watcher.js <<'WATCHER'
-          const fs = require('fs');
-          const token = process.env.DISCORD_TOKEN;
-          const channel = process.env.LOGS_CHANNEL;
-          const file = process.env.LOG_FILE;
-          const doneFile = process.env.DONE_FILE;
-          let offset = 0;
-          let buf = '';
-          async function post(text) {
-            // split into <=1900 char chunks
-            const chunks = [];
-            let i = 0;
-            while (i < text.length) { chunks.push(text.slice(i, i+1900)); i += 1900; }
-            for (const c of chunks) {
-              await fetch('https://discord.com/api/v10/channels/'+channel+'/messages', {
-                method: 'POST',
-                headers: { 'Authorization': 'Bot '+token, 'Content-Type': 'application/json' },
-                body: JSON.stringify({ content: c }),
-              }).catch(()=>{});
-              await new Promise(r=>setTimeout(r, 1200));
-            }
-          }
-          (async () => {
-            while (true) {
-              try {
-                if (fs.existsSync(file)) {
-                  const st = fs.statSync(file);
-                  if (st.size > offset) {
-                    const fd = fs.openSync(file, 'r');
-                    const b = Buffer.alloc(st.size - offset);
-                    fs.readSync(fd, b, 0, b.length, offset);
-                    fs.closeSync(fd);
-                    offset = st.size;
-                    buf += b.toString('utf8');
-                    // post complete lines
-                    let idx;
-                    while ((idx = buf.indexOf('\n')) !== -1) {
-                      const line = buf.slice(0, idx+1);
-                      buf = buf.slice(idx+1);
-                      await post(line);
-                    }
-                  }
-                }
-              } catch (e) {}
-              if (fs.existsSync(doneFile)) {
-                // flush remaining
-                if (buf.length) { await post(buf); buf = ''; }
-                await post('DONE ✅');
-                process.exit(0);
-              }
-              await new Promise(r=>setTimeout(r, 3000));
-            }
-          })();
-          WATCHER
           export LOG_FILE=/tmp/opencode.log
           export DONE_FILE=/tmp/opencode.done
           export LOGS_CHANNEL=1568947421801619557
-          node /tmp/watcher.js &
-          WATCHER_PID=$!
+          rm -f /tmp/opencode.log /tmp/opencode.done
           echo "Starting opencode..." > /tmp/opencode.log
+          node scripts/log-watcher.js &
+          WATCHER_PID=$!
           timeout 540 opencode run --auto --model "${{ inputs.model || 'google/gemini-3.8-flash' }}" "${{ inputs.prompt }}" >> /tmp/opencode.log 2>&1
           OPENCODE_EXIT=$?
           touch /tmp/opencode.done
@@ -126,7 +72,6 @@ jobs:
           exit $OPENCODE_EXIT
 
       - name: Create pull request
-        if: ${{ inputs.channel_id != '' || true }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
