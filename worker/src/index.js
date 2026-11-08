@@ -70,7 +70,9 @@ async function handleInteraction(interaction, env) {
       }
     );
     if (!ghResp.ok) {
-      return jsonResponse({ type: 4, data: { content: `Failed to start task (${ghResp.status}).` } });
+      const errText = await ghResp.text();
+      console.error('GitHub dispatch failed', ghResp.status, errText);
+      return jsonResponse({ type: 4, data: { content: `Failed to start task (${ghResp.status}): ${errText.slice(0, 200)}` } });
     }
     const runData = await ghResp.json().catch(() => ({}));
     if (runData.workflow_run_id) {
@@ -144,7 +146,9 @@ async function handleInteraction(interaction, env) {
       }
     );
     if (!ghResp.ok) {
-      return jsonResponse({ type: 4, data: { content: 'Failed to start call.' } });
+      const errText = await ghResp.text();
+      console.error('GitHub dispatch failed (call)', ghResp.status, errText);
+      return jsonResponse({ type: 4, data: { content: `Failed to start call (${ghResp.status}): ${errText.slice(0, 200)}` } });
     }
     return jsonResponse({ type: 4, data: { content: 'Starting a call. I will DM you a link shortly.' } });
   }
