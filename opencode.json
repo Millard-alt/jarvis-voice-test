@@ -5,7 +5,7 @@
       "npm": "@ai-sdk/openai-compatible",
       "name": "GitHub Models",
       "options": {
-        "baseURL": "https://models.github.ai/inference",
+        "baseURL": "https://models.inference.ai.azure.com",
         "apiKey": "{env:GITHUB_TOKEN}"
       },
       "models": {
