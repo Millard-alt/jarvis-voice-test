@@ -22,16 +22,21 @@ jobs:
       - name: Install OpenCode
         run: curl -fsSL https://opencode.ai/v2/install | bash
 
-      - name: Run OpenCode (headless)
+      - name: Run OpenCode
         timeout-minutes: 10
         env:
-          CI: "true"
-          PATH: "$HOME/.opencode/bin:$PATH"
-          GOOGLE_GENERATIVE_AI_API_KEY: ${{ secrets.GOOGLE_GENERATIVE_AI_API_KEY }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CI: true
         run: |
           export PATH="$HOME/.opencode/bin:$PATH"
-          opencode run "${{ inputs.task }}" --non-interactive
+          
+          # Extract task input or fallback to default test prompt
+          TASK_PROMPT="${{ inputs.task || github.event.inputs.task }}"
+          if [ -z "$TASK_PROMPT" ]; then
+            TASK_PROMPT="Add a test comment to verify non-interactive execution"
+          fi
+
+          # Execute in non-interactive, auto-approved mode
+          opencode run --auto "$TASK_PROMPT"
 
       - name: Create branch and PR
         env:
