@@ -63,6 +63,7 @@ async function handleInteraction(interaction, env) {
         headers: {
           'Authorization': `Bearer ${env.GITHUB_TOKEN}`,
           'Accept': 'application/vnd.github+json',
+        'User-Agent': 'jarvis-worker',
           'X-GitHub-Api-Version': '2026-03-10',
           'Content-Type': 'application/json',
         },
@@ -99,6 +100,7 @@ async function handleInteraction(interaction, env) {
         headers: {
           'Authorization': `Bearer ${env.GITHUB_TOKEN}`,
           'Accept': 'application/vnd.github+json',
+        'User-Agent': 'jarvis-worker',
           'X-GitHub-Api-Version': '2026-03-10',
         },
       }
@@ -123,6 +125,7 @@ async function handleInteraction(interaction, env) {
         headers: {
           'Authorization': `Bearer ${env.GITHUB_TOKEN}`,
           'Accept': 'application/vnd.github+json',
+        'User-Agent': 'jarvis-worker',
           'X-GitHub-Api-Version': '2026-03-10',
         },
       }
@@ -139,6 +142,7 @@ async function handleInteraction(interaction, env) {
         headers: {
           'Authorization': `Bearer ${env.GITHUB_TOKEN}`,
           'Accept': 'application/vnd.github+json',
+        'User-Agent': 'jarvis-worker',
           'X-GitHub-Api-Version': '2026-03-10',
           'Content-Type': 'application/json',
         },
