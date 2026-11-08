@@ -11,7 +11,7 @@ on:
         description: 'Model (provider/model)'
         required: false
         type: string
-        default: 'google/gemini-2.5-flash'
+        default: 'google/gemini-3.8-flash'
       channel_id:
         description: 'Discord channel to report to'
         required: false
