@@ -28,13 +28,13 @@ function jsonResponse(data, status = 200) {
 }
 
 async function handleInteraction(interaction, env) {
+  if (interaction.type === 1) {
+    return jsonResponse({ type: 1 });
+  }
+
   const userId = interaction.member?.user?.id || interaction.user?.id;
   if (userId !== OWNER_ID) {
     return new Response(null, { status: 204 });
-  }
-
-  if (interaction.type === 1) {
-    return jsonResponse({ type: 1 });
   }
 
   if (interaction.type !== 2) {
