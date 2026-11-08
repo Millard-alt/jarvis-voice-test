@@ -11,7 +11,7 @@ on:
         description: 'Model (provider/model)'
         required: false
         type: string
-        default: 'openrouter/google/gemma-4-31b-it:free'
+        default: 'openrouter/nvidia/nemotron-3.5-super-vl:free'
       channel_id:
         description: 'Discord channel to report to'
         required: false
@@ -71,7 +71,7 @@ jobs:
           echo "Starting opencode..." > /tmp/opencode.log
           node scripts/log-watcher.js &
           WATCHER_PID=$!
-          timeout -k 30 540 opencode run --auto --model "${{ inputs.model || 'openrouter/google/gemma-4-31b-it:free' }}" "${{ github.event.inputs.task }}" >> /tmp/opencode.log 2>&1
+          timeout -k 30 540 opencode run --auto --model "${{ inputs.model || 'openrouter/nvidia/nemotron-3.5-super-vl:free' }}" "${{ github.event.inputs.task }}" >> /tmp/opencode.log 2>&1
           OPENCODE_EXIT=$?
           touch /tmp/opencode.done
           wait $WATCHER_PID

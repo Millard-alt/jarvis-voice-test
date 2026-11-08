@@ -39,7 +39,7 @@ jobs:
           fi
 
           # Run non-interactively using OpenRouter (free tier) and plain text output
-          opencode run --model "openrouter/google/gemma-4-31b-it:free" --auto "$TASK_PROMPT"
+          opencode run --model "openrouter/nvidia/nemotron-3.5-super-vl:free" --auto "$TASK_PROMPT"
 
       - name: Create branch and PR
         env:
