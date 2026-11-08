@@ -49,15 +49,20 @@ jobs:
         run: curl -fsSL https://opencode.ai/install | bash
 
       - name: Run OpenCode
-        env:
+        timeout-minutes: 12        env:
           GOOGLE_GENERATIVE_AI_API_KEY: ${{ secrets.GOOGLE_GENERATIVE_AI_API_KEY }}
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_GENERATIVE_AI_API_KEY }}
           GEMINI_API_KEY: ${{ secrets.GOOGLE_GENERATIVE_AI_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
+          CI: "true"
+          OPENCODE_DISABLE_AUTOUPDATE: "true"
           OPENCODE_PERMISSION: '{"permissions":[{"action":"read","resource":"*.env","effect":"deny"},{"action":"read","resource":"*.env.*","effect":"deny"},{"action":"shell","resource":"git push *","effect":"deny"}]}'
         run: |
           export PATH="$HOME/.opencode/bin:$PATH"
+          echo "PATH=$PATH"
+          which opencode || echo "opencode not found"
+          opencode --version || true
           export LOG_FILE=/tmp/opencode.log
           export DONE_FILE=/tmp/opencode.done
           export LOGS_CHANNEL=1568947421801619557
@@ -65,7 +70,7 @@ jobs:
           echo "Starting opencode..." > /tmp/opencode.log
           node scripts/log-watcher.js &
           WATCHER_PID=$!
-          timeout 540 opencode run --auto --model "${{ inputs.model || 'google/gemini-3.8-flash' }}" "${{ inputs.prompt }}" >> /tmp/opencode.log 2>&1
+          timeout -k 30 540 opencode run --auto --model "${{ inputs.model || 'google/gemini-3.8-flash' }}" "${{ inputs.prompt }}" >> /tmp/opencode.log 2>&1
           OPENCODE_EXIT=$?
           touch /tmp/opencode.done
           wait $WATCHER_PID
