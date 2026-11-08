@@ -56,6 +56,7 @@ async function handleInteraction(interaction, env) {
 
     const model = (await env.JARVIS_KV.get('model')) || '';
     const [owner, repoName] = env.TASK_REPO.split('/');
+    console.log('Dispatching workflow', env.TASK_WORKFLOW, 'in', env.TASK_REPO);
     const ghResp = await fetch(
       `https://api.github.com/repos/${owner}/${repoName}/actions/workflows/${env.TASK_WORKFLOW}/dispatches`,
       {
