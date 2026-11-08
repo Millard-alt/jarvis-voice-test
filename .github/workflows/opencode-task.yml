@@ -21,7 +21,7 @@ on:
 jobs:
   opencode:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     permissions:
       contents: write
       pull-requests: write
@@ -45,45 +45,133 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Install OpenCode
+        run: curl -fsSL https://opencode.ai/install | bash
+
       - name: Run OpenCode
-        uses: anomalyco/opencode/github@latest
         env:
           GOOGLE_GENERATIVE_AI_API_KEY: ${{ secrets.GOOGLE_GENERATIVE_AI_API_KEY }}
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_GENERATIVE_AI_API_KEY }}
           GEMINI_API_KEY: ${{ secrets.GOOGLE_GENERATIVE_AI_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          model: ${{ inputs.model || 'google/gemini-2.5-flash' }}
-          prompt: ${{ inputs.prompt }}
-          use_github_token: true
+          OPENCODE_PERMISSION: '{"permissions":[{"action":"read","resource":"*.env","effect":"deny"},{"action":"read","resource":"*.env.*","effect":"deny"},{"action":"shell","resource":"git push *","effect":"deny"}]}'
+        run: |
+          export PATH="$HOME/.opencode/bin:$PATH"
+          # Start a background watcher that streams new log lines to #logs
+          cat > /tmp/watcher.js <<'WATCHER'
+          const fs = require('fs');
+          const token = process.env.DISCORD_TOKEN;
+          const channel = process.env.LOGS_CHANNEL;
+          const file = process.env.LOG_FILE;
+          const doneFile = process.env.DONE_FILE;
+          let offset = 0;
+          let buf = '';
+          async function post(text) {
+            // split into <=1900 char chunks
+            const chunks = [];
+            let i = 0;
+            while (i < text.length) { chunks.push(text.slice(i, i+1900)); i += 1900; }
+            for (const c of chunks) {
+              await fetch('https://discord.com/api/v10/channels/'+channel+'/messages', {
+                method: 'POST',
+                headers: { 'Authorization': 'Bot '+token, 'Content-Type': 'application/json' },
+                body: JSON.stringify({ content: c }),
+              }).catch(()=>{});
+              await new Promise(r=>setTimeout(r, 1200));
+            }
+          }
+          (async () => {
+            while (true) {
+              try {
+                if (fs.existsSync(file)) {
+                  const st = fs.statSync(file);
+                  if (st.size > offset) {
+                    const fd = fs.openSync(file, 'r');
+                    const b = Buffer.alloc(st.size - offset);
+                    fs.readSync(fd, b, 0, b.length, offset);
+                    fs.closeSync(fd);
+                    offset = st.size;
+                    buf += b.toString('utf8');
+                    // post complete lines
+                    let idx;
+                    while ((idx = buf.indexOf('\n')) !== -1) {
+                      const line = buf.slice(0, idx+1);
+                      buf = buf.slice(idx+1);
+                      await post(line);
+                    }
+                  }
+                }
+              } catch (e) {}
+              if (fs.existsSync(doneFile)) {
+                // flush remaining
+                if (buf.length) { await post(buf); buf = ''; }
+                await post('DONE ✅');
+                process.exit(0);
+              }
+              await new Promise(r=>setTimeout(r, 3000));
+            }
+          })();
+          WATCHER
+          export LOG_FILE=/tmp/opencode.log
+          export DONE_FILE=/tmp/opencode.done
+          export LOGS_CHANNEL=1568947421801619557
+          node /tmp/watcher.js &
+          WATCHER_PID=$!
+          opencode run --auto --model "${{ inputs.model || 'google/gemini-3.8-flash' }}" "${{ inputs.prompt }}" > /tmp/opencode.log 2>&1
+          OPENCODE_EXIT=$?
+          touch /tmp/opencode.done
+          wait $WATCHER_PID
+          exit $OPENCODE_EXIT
+
+      - name: Create pull request
+        if: ${{ inputs.channel_id != '' || true }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          BRANCH="opencode/$(date +%s)"
+          git checkout -b "$BRANCH"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+            echo "NO_PR=true" >> $GITHUB_ENV
+            exit 0
+          fi
+          git commit -m "opencode: ${{ inputs.prompt }}"
+          git push origin "$BRANCH"
+          PR_URL=$(gh pr create --title "opencode: ${{ inputs.prompt }}" --body "Automated change by opencode." --head "$BRANCH" --base main)
+          echo "PR_URL=$PR_URL" >> $GITHUB_ENV
 
       - name: Report to Discord
-        if: ${{ inputs.channel_id != '' }}
+        if: ${{ always() && inputs.channel_id != '' }}
         env:
           DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
           CHANNEL_ID: ${{ inputs.channel_id }}
-          REPO: ${{ github.repository }}
+          PR_URL: ${{ env.PR_URL }}
           PROMPT: ${{ inputs.prompt }}
         run: |
           node -e '
-          const token = process.env.DISCORD_TOKEN;
-          const channelId = process.env.CHANNEL_ID;
-          const repo = process.env.REPO;
-          const [owner, name] = repo.split("/");
-          (async () => {
-            // Find the most recent open PR
-            const r = await fetch(`https://api.github.com/repos/${owner}/${name}/pulls?state=open&sort=created&direction=desc&per_page=1`, {
-              headers: { "Accept": "application/vnd.github+json", "User-Agent": "jarvis-worker" },
-            });
-            const prs = await r.json();
-            const prUrl = (prs && prs[0] && prs[0].html_url) ? prs[0].html_url : "(no PR found)";
-            const msg = "Task finished.\nPrompt: " + process.env.PROMPT + "\nPR: " + prUrl;
-            const m = await fetch("https://discord.com/api/v10/channels/" + channelId + "/messages", {
-              method: "POST",
-              headers: { "Authorization": "Bot " + token, "Content-Type": "application/json" },
-              body: JSON.stringify({ content: msg }),
-            });
-            if (!m.ok) { console.error("report failed", m.status, await m.text()); process.exit(1); }
-            console.log("Report sent");
-          })().catch(e => { console.error(e); process.exit(1); });
+          const token=process.env.DISCORD_TOKEN; const ch=process.env.CHANNEL_ID;
+          const pr=process.env.PR_URL || "(no PR created)";
+          const msg="Task finished.\nPrompt: "+process.env.PROMPT+"\nPR: "+pr;
+          fetch("https://discord.com/api/v10/channels/"+ch+"/messages",{method:"POST",headers:{"Authorization":"Bot "+token,"Content-Type":"application/json"},body:JSON.stringify({content:msg})})
+          .then(r=>r.ok?console.log("report sent"):console.error("report failed",r.status))
+          .catch(e=>console.error(e));
+          '
+
+      - name: Post AI response
+        if: ${{ always() && inputs.channel_id != '' }}
+        env:
+          DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
+          RESPONSE_CHANNEL: "1568926056545517602"
+        run: |
+          node -e '
+          const fs=require("fs");
+          const token=process.env.DISCORD_TOKEN; const ch=process.env.RESPONSE_CHANNEL;
+          let log=""; try { log=fs.readFileSync("/tmp/opencode.log","utf8"); } catch(e){}
+          const tail=log.slice(-1900);
+          fetch("https://discord.com/api/v10/channels/"+ch+"/messages",{method:"POST",headers:{"Authorization":"Bot "+token,"Content-Type":"application/json"},body:JSON.stringify({content:tail||"(no output)"})})
+          .then(r=>r.ok?console.log("response posted"):console.error("post failed",r.status))
+          .catch(e=>console.error(e));
           '
