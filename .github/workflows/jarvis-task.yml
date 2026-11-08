@@ -25,18 +25,20 @@ jobs:
       - name: Run OpenCode
         timeout-minutes: 10
         env:
-          CI: true
+          CI: "true"
+          FORCE_COLOR: "0"
+          NO_COLOR: "1"
         run: |
           export PATH="$HOME/.opencode/bin:$PATH"
           
-          # Extract task input or fallback to default test prompt
+          # Extract task input or fallback to a default test string
           TASK_PROMPT="${{ inputs.task || github.event.inputs.task }}"
           if [ -z "$TASK_PROMPT" ]; then
             TASK_PROMPT="Add a test comment to verify non-interactive execution"
           fi
 
-          # Execute in non-interactive, auto-approved mode
-          opencode run --auto "$TASK_PROMPT"
+          # Run non-interactively using beam-free and plain text output
+          opencode run --model "opencode/beam-free" --auto "$TASK_PROMPT"
 
       - name: Create branch and PR
         env:
