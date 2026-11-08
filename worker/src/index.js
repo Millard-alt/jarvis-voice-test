@@ -54,7 +54,6 @@ async function handleInteraction(interaction, env) {
     }
     await env.JARVIS_KV.put('last_task_ts', String(now));
 
-    const model = (await env.JARVIS_KV.get('model')) || '';
     const [owner, repoName] = env.TASK_REPO.split('/');
     console.log('Dispatching workflow', env.TASK_WORKFLOW, 'in', env.TASK_REPO);
     const ghResp = await fetch(
@@ -68,7 +67,7 @@ async function handleInteraction(interaction, env) {
           'X-GitHub-Api-Version': '2026-03-10',
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ ref: 'main', inputs: { task: prompt, model, channel_id: interaction.channel_id || '' } }),
+        body: JSON.stringify({ ref: 'main', inputs: { task: prompt } }),
       }
     );
     if (!ghResp.ok) {
