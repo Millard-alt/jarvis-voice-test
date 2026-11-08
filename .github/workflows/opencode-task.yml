@@ -27,6 +27,19 @@ jobs:
       pull-requests: write
       issues: write
     steps:
+      - name: Notify start
+        if: ${{ inputs.channel_id != '' }}
+        env:
+          DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
+          CHANNEL_ID: ${{ inputs.channel_id }}
+        run: |
+          node -e '
+          const token=process.env.DISCORD_TOKEN; const ch=process.env.CHANNEL_ID;
+          fetch("https://discord.com/api/v10/channels/"+ch+"/messages",{method:"POST",headers:{"Authorization":"Bot "+token,"Content-Type":"application/json"},body:JSON.stringify({content:"Task started. Working on it..."})})
+          .then(r=>r.ok?console.log("start notified"):console.error("notify failed",r.status))
+          .catch(e=>console.error(e));
+          '
+
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
