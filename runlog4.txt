@@ -1,0 +1,271 @@
+﻿2026-11-08T13:59:05.8908352Z Current runner version: '2.338.2'
+2026-11-08T13:59:05.8936541Z ##[group]Runner Image Provisioner
+2026-11-08T13:59:05.8938170Z Hosted Compute Agent
+2026-11-08T13:59:05.8938795Z Version: 20261028.624
+2026-11-08T13:59:05.8939432Z Commit: 54898b74c23fde5556c9b3c3a2290865feef0dfe
+2026-11-08T13:59:05.8940224Z Build Date: 2026-10-28T21:51:42Z
+2026-11-08T13:59:05.8940996Z Worker ID: {ce364edb-3d6e-465e-aeeb-d2022c18ef1e}
+2026-11-08T13:59:05.8941749Z Region: westus2
+2026-11-08T13:59:05.8942327Z Cloud: Azure
+2026-11-08T13:59:05.8942857Z ##[endgroup]
+2026-11-08T13:59:05.8944422Z ##[group]Operating System
+2026-11-08T13:59:05.8945135Z Ubuntu
+2026-11-08T13:59:05.8945727Z 26.04.1
+2026-11-08T13:59:05.8946264Z LTS
+2026-11-08T13:59:05.8947126Z ##[endgroup]
+2026-11-08T13:59:05.8948251Z ##[group]Runner Image
+2026-11-08T13:59:05.8948874Z Image: ubuntu-26.04
+2026-11-08T13:59:05.8949477Z Version: 20261101.186.1
+2026-11-08T13:59:05.8950883Z Included Software: https://github.com/actions/runner-images/blob/ubuntu26/20261101.186/images/ubuntu/Ubuntu2604-Readme.md
+2026-11-08T13:59:05.8952542Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu26%2F20261101.186
+2026-11-08T13:59:05.8953514Z ##[endgroup]
+2026-11-08T13:59:05.8954808Z ##[group]GITHUB_TOKEN Permissions
+2026-11-08T13:59:05.8957357Z Contents: write
+2026-11-08T13:59:05.8958105Z Metadata: read
+2026-11-08T13:59:05.8958676Z PullRequests: write
+2026-11-08T13:59:05.8959230Z ##[endgroup]
+2026-11-08T13:59:05.8961484Z Secret source: Actions
+2026-11-08T13:59:05.8962502Z Cache mode: write
+2026-11-08T13:59:05.8963259Z Prepare workflow directory
+2026-11-08T13:59:05.9308461Z Prepare all required actions
+2026-11-08T13:59:05.9357978Z Getting action download info
+2026-11-08T13:59:06.2448070Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-11-08T13:59:06.4796603Z Complete job name: jarvis
+2026-11-08T13:59:06.5697014Z ##[group]Run actions/checkout@v4
+2026-11-08T13:59:06.5697957Z with:
+2026-11-08T13:59:06.5698449Z   repository: Millard-alt/jarvis-voice-test
+2026-11-08T13:59:06.5702239Z   token: ***
+2026-11-08T13:59:06.5702680Z   ssh-strict: true
+2026-11-08T13:59:06.5703150Z   ssh-user: git
+2026-11-08T13:59:06.5703599Z   persist-credentials: true
+2026-11-08T13:59:06.5704092Z   clean: true
+2026-11-08T13:59:06.5704546Z   sparse-checkout-cone-mode: true
+2026-11-08T13:59:06.5705074Z   fetch-depth: 1
+2026-11-08T13:59:06.5705518Z   fetch-tags: false
+2026-11-08T13:59:06.5705969Z   show-progress: true
+2026-11-08T13:59:06.5706421Z   lfs: false
+2026-11-08T13:59:06.5706996Z   submodules: false
+2026-11-08T13:59:06.5707457Z   set-safe-directory: true
+2026-11-08T13:59:06.5707981Z   allow-unsafe-pr-checkout: false
+2026-11-08T13:59:06.5708764Z ##[endgroup]
+2026-11-08T13:59:06.8571726Z Syncing repository: Millard-alt/jarvis-voice-test
+2026-11-08T13:59:06.8574933Z ##[group]Getting Git version info
+2026-11-08T13:59:06.8576546Z Working directory is '/home/runner/work/jarvis-voice-test/jarvis-voice-test'
+2026-11-08T13:59:06.8579035Z [command]/usr/bin/git version
+2026-11-08T13:59:06.8580070Z git version 2.56.0
+2026-11-08T13:59:06.8615511Z ##[endgroup]
+2026-11-08T13:59:06.8641087Z Temporarily overriding HOME='/home/runner/work/_temp/e3df47b6-842b-4e94-8189-16a14b7b396d' before making global git config changes
+2026-11-08T13:59:06.8659805Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-08T13:59:06.8662435Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/jarvis-voice-test/jarvis-voice-test
+2026-11-08T13:59:06.8718900Z Deleting the contents of '/home/runner/work/jarvis-voice-test/jarvis-voice-test'
+2026-11-08T13:59:06.8731402Z ##[group]Initializing the repository
+2026-11-08T13:59:06.8737722Z [command]/usr/bin/git init /home/runner/work/jarvis-voice-test/jarvis-voice-test
+2026-11-08T13:59:06.8864181Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-11-08T13:59:06.8866410Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-11-08T13:59:06.8868858Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-11-08T13:59:06.8870330Z hint: call:
+2026-11-08T13:59:06.8870980Z hint:
+2026-11-08T13:59:06.8872107Z hint: 	git config --global init.defaultBranch <name>
+2026-11-08T13:59:06.8873210Z hint:
+2026-11-08T13:59:06.8874612Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-11-08T13:59:06.8876913Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-11-08T13:59:06.8878631Z hint:
+2026-11-08T13:59:06.8879785Z hint: 	git branch -m <name>
+2026-11-08T13:59:06.8881013Z hint:
+2026-11-08T13:59:06.8882602Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-11-08T13:59:06.8885177Z Initialized empty Git repository in /home/runner/work/jarvis-voice-test/jarvis-voice-test/.git/
+2026-11-08T13:59:06.8893832Z [command]/usr/bin/git remote add origin https://github.com/Millard-alt/jarvis-voice-test
+2026-11-08T13:59:06.8953274Z ##[endgroup]
+2026-11-08T13:59:06.8954672Z ##[group]Disabling automatic garbage collection
+2026-11-08T13:59:06.8958116Z [command]/usr/bin/git config --local gc.auto 0
+2026-11-08T13:59:06.9009068Z ##[endgroup]
+2026-11-08T13:59:06.9010303Z ##[group]Setting up auth
+2026-11-08T13:59:06.9016872Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-08T13:59:06.9058838Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-08T13:59:06.9529493Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-08T13:59:06.9573843Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-08T13:59:06.9874919Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-08T13:59:06.9918368Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-08T13:59:07.0230287Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-11-08T13:59:07.0270765Z ##[endgroup]
+2026-11-08T13:59:07.0272087Z ##[group]Fetching the repository
+2026-11-08T13:59:07.0280601Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +04c4820be2188ac7780b167d453d318035b58053:refs/remotes/origin/main
+2026-11-08T13:59:08.3245253Z From https://github.com/Millard-alt/jarvis-voice-test
+2026-11-08T13:59:08.3248540Z  * [new ref]         04c4820be2188ac7780b167d453d318035b58053 -> origin/main
+2026-11-08T13:59:08.3255287Z ##[endgroup]
+2026-11-08T13:59:08.3258224Z ##[group]Determining the checkout info
+2026-11-08T13:59:08.3261431Z ##[endgroup]
+2026-11-08T13:59:08.3263531Z [command]/usr/bin/git sparse-checkout disable
+2026-11-08T13:59:08.3313856Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-11-08T13:59:08.3345818Z ##[group]Checking out the ref
+2026-11-08T13:59:08.3349320Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2026-11-08T13:59:08.9420502Z Switched to a new branch 'main'
+2026-11-08T13:59:08.9426894Z branch 'main' set up to track 'origin/main'.
+2026-11-08T13:59:08.9487694Z ##[endgroup]
+2026-11-08T13:59:08.9491299Z [command]/usr/bin/git log -1 --format=%H
+2026-11-08T13:59:08.9517188Z 04c4820be2188ac7780b167d453d318035b58053
+2026-11-08T13:59:08.9748735Z ##[group]Run curl -fsSL https://opencode.ai/v2/install | bash
+2026-11-08T13:59:08.9749405Z [36;1mcurl -fsSL https://opencode.ai/v2/install | bash[0m
+2026-11-08T13:59:08.9803700Z shell: /usr/bin/bash -e {0}
+2026-11-08T13:59:08.9804078Z ##[endgroup]
+2026-11-08T13:59:09.2224186Z [0m
+2026-11-08T13:59:09.2225169Z [0;2mInstalling [0mopencode [0;2mversion: [0m2.2.6[0m
+2026-11-08T13:59:09.3314963Z 
+2026-11-08T13:59:09.4317385Z ##                                                                         4.2%
+2026-11-08T13:59:09.5321244Z #########                                                                 13.2%
+2026-11-08T13:59:09.6326192Z ################                                                          22.4%
+2026-11-08T13:59:09.7329197Z ######################                                                    31.4%
+2026-11-08T13:59:09.8329951Z ############################                                              40.1%
+2026-11-08T13:59:09.9332821Z ###################################                                       48.6%
+2026-11-08T13:59:10.0331764Z #########################################                                 57.2%
+2026-11-08T13:59:10.1333134Z ###############################################                           66.0%
+2026-11-08T13:59:10.2334417Z #####################################################                     74.6%
+2026-11-08T13:59:10.3335796Z ###########################################################               83.1%
+2026-11-08T13:59:10.4343607Z #################################################################         91.6%
+2026-11-08T13:59:10.4365927Z #######################################################################   99.7%
+2026-11-08T13:59:10.4366797Z ######################################################################## 100.0%
+2026-11-08T13:59:11.6042850Z [0m[0;2mSuccessfully added [0mopencode [0;2mto $PATH in [0m/home/runner/.bashrc[0m
+2026-11-08T13:59:11.6044444Z [0mAdded /home/runner/.opencode/bin to $GITHUB_PATH[0m
+2026-11-08T13:59:11.6045100Z 
+2026-11-08T13:59:11.6045821Z [0;2m                    [0m             ▄     
+2026-11-08T13:59:11.6047176Z [0;2m█▀▀█ █▀▀█ █▀▀█ █▀▀▄ [0m█▀▀▀ █▀▀█ █▀▀█ █▀▀█
+2026-11-08T13:59:11.6048171Z [0;2m█░░█ █░░█ █▀▀▀ █░░█ [0m█░░░ █░░█ █░░█ █▀▀▀
+2026-11-08T13:59:11.6049092Z [0;2m▀▀▀▀ █▀▀▀ ▀▀▀▀ ▀  ▀ [0m▀▀▀▀ ▀▀▀▀ ▀▀▀▀ ▀▀▀▀
+2026-11-08T13:59:11.6049649Z 
+2026-11-08T13:59:11.6051877Z 
+2026-11-08T13:59:11.6052886Z [0;2mOpenCode includes free models, to start:[0m
+2026-11-08T13:59:11.6053510Z 
+2026-11-08T13:59:11.6054138Z exec $SHELL   [0;2m# Reload PATH (or open a new terminal)[0m
+2026-11-08T13:59:11.6055246Z cd <project>  [0;2m# Open directory[0m
+2026-11-08T13:59:11.6056072Z opencode      [0;2m# Run command[0m
+2026-11-08T13:59:11.6056572Z 
+2026-11-08T13:59:11.6057291Z [0;2mFor more information visit [0mhttps://opencode.ai/docs
+2026-11-08T13:59:11.6057898Z 
+2026-11-08T13:59:11.6057946Z 
+2026-11-08T13:59:11.6152064Z ##[group]Run export PATH="$HOME/.opencode/bin:$PATH"
+2026-11-08T13:59:11.6152536Z [36;1mexport PATH="$HOME/.opencode/bin:$PATH"[0m
+2026-11-08T13:59:11.6152864Z [36;1m[0m
+2026-11-08T13:59:11.6153168Z [36;1m# Extract task input or fallback to a default test string[0m
+2026-11-08T13:59:11.6153562Z [36;1mTASK_PROMPT="add a comment to index.j"[0m
+2026-11-08T13:59:11.6153881Z [36;1mif [ -z "$TASK_PROMPT" ]; then[0m
+2026-11-08T13:59:11.6154287Z [36;1m  TASK_PROMPT="Add a test comment to verify non-interactive execution"[0m
+2026-11-08T13:59:11.6154722Z [36;1mfi[0m
+2026-11-08T13:59:11.6154923Z [36;1m[0m
+2026-11-08T13:59:11.6155256Z [36;1m# Run non-interactively using OpenRouter (free tier) and plain text output[0m
+2026-11-08T13:59:11.6156087Z [36;1mopencode run --model "openrouter/nvidia/nemotron-3.5-super-vl:free" --auto "$TASK_PROMPT"[0m
+2026-11-08T13:59:11.6213232Z shell: /usr/bin/bash -e {0}
+2026-11-08T13:59:11.6213509Z env:
+2026-11-08T13:59:11.6213706Z   CI: true
+2026-11-08T13:59:11.6213946Z   FORCE_COLOR: 0
+2026-11-08T13:59:11.6214170Z   NO_COLOR: 1
+2026-11-08T13:59:11.6214947Z   OPENROUTER_API_KEY: ***
+2026-11-08T13:59:11.6215217Z ##[endgroup]
+2026-11-08T13:59:14.2393990Z [0m
+2026-11-08T13:59:14.2394567Z > build · nvidia/nemotron-3.5-super-vl:free
+2026-11-08T13:59:14.8630139Z [0m$ [0mls -la
+2026-11-08T13:59:14.8630665Z total 44
+2026-11-08T13:59:14.8631034Z drwxr-xr-x 6 runner runner 4096 Nov  8 13:59 .
+2026-11-08T13:59:14.8631569Z drwxr-xr-x 3 runner runner 4096 Nov  8 13:59 ..
+2026-11-08T13:59:14.8632499Z drwxr-xr-x 7 runner runner 4096 Nov  8 13:59 .git
+2026-11-08T13:59:14.8633068Z drwxr-xr-x 3 runner runner 4096 Nov  8 13:59 .github
+2026-11-08T13:59:14.8633663Z -rw-r--r-- 1 runner runner  182 Nov  8 13:59 .gitignore
+2026-11-08T13:59:14.8634262Z -rw-r--r-- 1 runner runner  174 Nov  8 13:59 README.md
+2026-11-08T13:59:14.8634822Z drwxr-xr-x 2 runner runner 4096 Nov  8 13:59 scripts
+2026-11-08T13:59:14.8635415Z -rw-r--r-- 1 runner runner 9013 Nov  8 13:59 test-voice.js
+2026-11-08T13:59:14.8636020Z drwxr-xr-x 4 runner runner 4096 Nov  8 13:59 worker
+2026-11-08T13:59:14.9799467Z [0m✱ [0mGlob "index.j*" [90m60 matches[0m
+2026-11-08T13:59:15.7859954Z > build · nvidia/nemotron-3.5-super-vl:free
+2026-11-08T13:59:17.0804056Z There's no file named `index.j` in this repository. Let me check for any `index` files at the top level or a `.js` variant you might mean:
+2026-11-08T13:59:17.0985788Z [0m✱ [0mGlob "index.*" [90m100 matches[0m
+2026-11-08T13:59:17.1032801Z [0m✱ [0mGlob "**/index.js" [90min . · 43 matches[0m
+2026-11-08T13:59:18.2825578Z > build · nvidia/nemotron-3.5-super-vl:free
+2026-11-08T13:59:20.4240495Z There's no file named `index.j` in this repository. The closest project source file is `worker/src/index.js`, but I don't want to guess.
+2026-11-08T13:59:20.4241187Z 
+2026-11-08T13:59:20.4241358Z Which file did you mean? For example:
+2026-11-08T13:59:20.4242128Z - `worker/src/index.js` — the project's worker source
+2026-11-08T13:59:20.4242517Z - Or should I create a new `index.j` file?
+2026-11-08T13:59:20.4242718Z 
+2026-11-08T13:59:20.4242864Z Let me know the path and what comment you'd like added.
+2026-11-08T13:59:20.9068430Z ##[group]Run git config user.name "github-actions[bot]"
+2026-11-08T13:59:20.9068900Z [36;1mgit config user.name "github-actions[bot]"[0m
+2026-11-08T13:59:20.9069376Z [36;1mgit config user.email "41898282+github-actions[bot]@users.noreply.github.com"[0m
+2026-11-08T13:59:20.9069849Z [36;1mBRANCH="jarvis/task-42487519872"[0m
+2026-11-08T13:59:20.9070167Z [36;1mgit checkout -b "$BRANCH"[0m
+2026-11-08T13:59:20.9070432Z [36;1mgit add -A[0m
+2026-11-08T13:59:20.9070682Z [36;1mif git diff --cached --quiet; then[0m
+2026-11-08T13:59:20.9070992Z [36;1m  echo "No changes to commit."[0m
+2026-11-08T13:59:20.9071268Z [36;1m  echo "" > /tmp/jarvis_pr_url[0m
+2026-11-08T13:59:20.9071525Z [36;1m  exit 0[0m
+2026-11-08T13:59:20.9071725Z [36;1mfi[0m
+2026-11-08T13:59:20.9071980Z [36;1mgit commit -m "jarvis: add a comment to index.j"[0m
+2026-11-08T13:59:20.9072326Z [36;1mgit push origin "$BRANCH"[0m
+2026-11-08T13:59:20.9072695Z [36;1m# Create PR via GitHub REST API (works without 'gh' CLI)[0m
+2026-11-08T13:59:20.9073307Z [36;1mPR_RESPONSE=$(curl -s -w "\n%{http_code}" -X POST "https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls" \[0m
+2026-11-08T13:59:20.9074055Z [36;1m  -H "Authorization: ***" \[0m
+2026-11-08T13:59:20.9074388Z [36;1m  -H "Accept: application/vnd.github+json" \[0m
+2026-11-08T13:59:20.9074734Z [36;1m  -H "X-GitHub-Api-Version: 2026-03-10" \[0m
+2026-11-08T13:59:20.9075326Z [36;1m  -d "{\"title\":\"jarvis: add a comment to index.j\",\"head\":\"${BRANCH}\",\"base\":\"main\",\"body\":\"Automated change by Jarvis.\"}")[0m
+2026-11-08T13:59:20.9075939Z [36;1mHTTP_CODE=$(echo "$PR_RESPONSE" | tail -n1)[0m
+2026-11-08T13:59:20.9076288Z [36;1mPR_BODY=$(echo "$PR_RESPONSE" | sed '$d')[0m
+2026-11-08T13:59:20.9076598Z [36;1mif [ "$HTTP_CODE" = "201" ]; then[0m
+2026-11-08T13:59:20.9077490Z [36;1m  PR_URL=$(echo "$PR_BODY" | grep -o '"html_url": "[^"]*' | sed 's/"html_url": "//')[0m
+2026-11-08T13:59:20.9077938Z [36;1m  echo "$PR_URL" > /tmp/jarvis_pr_url[0m
+2026-11-08T13:59:20.9078228Z [36;1melse[0m
+2026-11-08T13:59:20.9078521Z [36;1m  echo "PR create failed (HTTP $HTTP_CODE): $PR_BODY" >&2[0m
+2026-11-08T13:59:20.9078889Z [36;1m  echo "" > /tmp/jarvis_pr_url[0m
+2026-11-08T13:59:20.9079154Z [36;1mfi[0m
+2026-11-08T13:59:20.9129104Z shell: /usr/bin/bash -e {0}
+2026-11-08T13:59:20.9129366Z env:
+2026-11-08T13:59:20.9131990Z   GITHUB_TOKEN: ***
+2026-11-08T13:59:20.9132263Z   GITHUB_REPOSITORY: Millard-alt/jarvis-voice-test
+2026-11-08T13:59:20.9132581Z ##[endgroup]
+2026-11-08T13:59:20.9261022Z Switched to a new branch 'jarvis/task-42487519872'
+2026-11-08T13:59:21.3041615Z No changes to commit.
+2026-11-08T13:59:21.3079805Z ##[group]Run PR_URL=$(cat /tmp/jarvis_pr_url 2>/dev/null || echo "")
+2026-11-08T13:59:21.3080326Z [36;1mPR_URL=$(cat /tmp/jarvis_pr_url 2>/dev/null || echo "")[0m
+2026-11-08T13:59:21.3080679Z [36;1mnode -e '[0m
+2026-11-08T13:59:21.3080943Z [36;1mconst token = process.env.DISCORD_BOT_TOKEN;[0m
+2026-11-08T13:59:21.3081287Z [36;1mconst userId = process.env.USER_ID;[0m
+2026-11-08T13:59:21.3081640Z [36;1mconst pr = process.argv[1] || "(no PR created)";[0m
+2026-11-08T13:59:21.3081963Z [36;1m(async () => {[0m
+2026-11-08T13:59:21.3082327Z [36;1m  const r = await fetch("https://discord.com/api/v10/users/@me/channels", {[0m
+2026-11-08T13:59:21.3082743Z [36;1m    method: "POST",[0m
+2026-11-08T13:59:21.3083147Z [36;1m    headers: { "Authorization": "Bot " + token, "Content-Type": "application/json" },[0m
+2026-11-08T13:59:21.3083630Z [36;1m    body: JSON.stringify({ recipient_id: userId }),[0m
+2026-11-08T13:59:21.3083940Z [36;1m  });[0m
+2026-11-08T13:59:21.3084355Z [36;1m  if (!r.ok) { console.error("DM channel failed", r.status, await r.text()); process.exit(1); }[0m
+2026-11-08T13:59:21.3084820Z [36;1m  const ch = await r.json();[0m
+2026-11-08T13:59:21.3085337Z [36;1m  const msg = "Task finished.\nPrompt: " + process.env.TASK + "\nStatus: " + process.env.JOB_STATUS + "\nPR: " + pr;[0m
+2026-11-08T13:59:21.3086060Z [36;1m  const m = await fetch("https://discord.com/api/v10/channels/" + ch.id + "/messages", {[0m
+2026-11-08T13:59:21.3086508Z [36;1m    method: "POST",[0m
+2026-11-08T13:59:21.3087197Z [36;1m    headers: { "Authorization": "Bot " + token, "Content-Type": "application/json" },[0m
+2026-11-08T13:59:21.3087685Z [36;1m    body: JSON.stringify({ content: msg }),[0m
+2026-11-08T13:59:21.3087988Z [36;1m  });[0m
+2026-11-08T13:59:21.3088383Z [36;1m  if (!m.ok) { console.error("message send failed", m.status, await m.text()); process.exit(1); }[0m
+2026-11-08T13:59:21.3088881Z [36;1m  console.log("Report sent to DM.");[0m
+2026-11-08T13:59:21.3089237Z [36;1m})().catch(e => { console.error(e); process.exit(1); });[0m
+2026-11-08T13:59:21.3089577Z [36;1m' "$PR_URL"[0m
+2026-11-08T13:59:21.3138683Z shell: /usr/bin/bash -e {0}
+2026-11-08T13:59:21.3138949Z env:
+2026-11-08T13:59:21.3139468Z   DISCORD_BOT_TOKEN: ***
+2026-11-08T13:59:21.3139723Z   USER_ID: 1270343449643843736
+2026-11-08T13:59:21.3139972Z   TASK: add a comment to index.j
+2026-11-08T13:59:21.3140223Z   JOB_STATUS: success
+2026-11-08T13:59:21.3140435Z ##[endgroup]
+2026-11-08T13:59:22.3929730Z Report sent to DM.
+2026-11-08T13:59:22.4162917Z Post job cleanup.
+2026-11-08T13:59:22.5082428Z [command]/usr/bin/git version
+2026-11-08T13:59:22.5117275Z git version 2.56.0
+2026-11-08T13:59:22.5167237Z Temporarily overriding HOME='/home/runner/work/_temp/b7fceeb9-f9a1-49d7-a734-9961a80ffbce' before making global git config changes
+2026-11-08T13:59:22.5168412Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-08T13:59:22.5169151Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/jarvis-voice-test/jarvis-voice-test
+2026-11-08T13:59:22.5214864Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-08T13:59:22.5253518Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-08T13:59:22.5576577Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-08T13:59:22.5603866Z http.https://github.com/.extraheader
+2026-11-08T13:59:22.5616424Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-08T13:59:22.5666539Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-08T13:59:22.5999833Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-08T13:59:22.6037714Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-08T13:59:22.6469078Z Cleaning up orphan processes
+2026-11-08T13:59:22.6875632Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
