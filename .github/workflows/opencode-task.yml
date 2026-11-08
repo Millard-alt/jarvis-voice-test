@@ -77,9 +77,10 @@ jobs:
           wait $WATCHER_PID
           exit $OPENCODE_EXIT
 
-      - name: Create pull request
+      - name: Create branch and PR
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -93,7 +94,12 @@ jobs:
           fi
           git commit -m "opencode: ${{ inputs.task }}"
           git push origin "$BRANCH"
-          PR_URL=$(gh pr create --title "opencode: ${{ inputs.task }}" --body "Automated change by opencode." --head "$BRANCH" --base main)
+          PR_RESPONSE=$(curl -s -X POST "https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls" \
+            -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2026-03-10" \
+            -d "{\"title\":\"opencode: ${{ inputs.task }}\",\"head\":\"${BRANCH}\",\"base\":\"main\",\"body\":\"Automated change by opencode.\"}")
+          PR_URL=$(echo "$PR_RESPONSE" | node -e 'let d="";process.stdin.on("data",c=>d+=c);process.stdin.on("end",()=>{try{console.log(JSON.parse(d).html_url)}catch(e){console.error("PR create failed:",d);process.exit(1)}})')
           echo "PR_URL=$PR_URL" >> $GITHUB_ENV
 
       - name: Report to Discord
