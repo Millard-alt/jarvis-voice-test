@@ -1,5 +1,7 @@
 // test-voice.js
 // Joins your #call voice channel, DMs you a link, and plays a beep when you join.
+const PROCESS_START_MS = Date.now();
+console.log('PROCESS_START', new Date(PROCESS_START_MS).toISOString());
 // Implements hang-up rules from the spec:
 //   - owner leaves the call (after a short grace period)
 //   - owner says they are done  (voice phrase: handled in a later step)
@@ -187,7 +189,10 @@ async function start() {
   });
 
   await entersState(connection, VoiceConnectionStatus.Ready, 30_000);
+  const readyElapsed = ((Date.now() - PROCESS_START_MS) / 1000).toFixed(1);
   console.log('Voice connection READY');
+  console.log('READY', new Date().toISOString());
+  console.log(`IN_PROCESS_ELAPSED_S=${readyElapsed}`);
 
   player = createAudioPlayer();
   connection.subscribe(player);
