@@ -49,7 +49,8 @@ jobs:
         run: curl -fsSL https://opencode.ai/install | bash
 
       - name: Run OpenCode
-        timeout-minutes: 12        env:
+        timeout-minutes: 12
+        env:
           GOOGLE_GENERATIVE_AI_API_KEY: ${{ secrets.GOOGLE_GENERATIVE_AI_API_KEY }}
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_GENERATIVE_AI_API_KEY }}
           GEMINI_API_KEY: ${{ secrets.GOOGLE_GENERATIVE_AI_API_KEY }}
