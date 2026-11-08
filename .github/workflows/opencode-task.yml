@@ -11,7 +11,7 @@ on:
         description: 'Model (provider/model)'
         required: false
         type: string
-        default: 'google/gemini-3.8-flash'
+        default: 'opencode/beam-free'
       channel_id:
         description: 'Discord channel to report to'
         required: false
@@ -57,6 +57,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
           CI: "true"
+          FORCE_COLOR: "0"
+          NO_COLOR: "1"
           OPENCODE_DISABLE_AUTOUPDATE: "true"
           OPENCODE_PERMISSION: '{"permissions":[{"action":"read","resource":"*.env","effect":"deny"},{"action":"read","resource":"*.env.*","effect":"deny"},{"action":"shell","resource":"git push *","effect":"deny"}]}'
         run: |
@@ -71,7 +73,7 @@ jobs:
           echo "Starting opencode..." > /tmp/opencode.log
           node scripts/log-watcher.js &
           WATCHER_PID=$!
-          timeout -k 30 540 opencode run --auto --model "${{ inputs.model || 'google/gemini-3.8-flash' }}" "${{ github.event.inputs.task }}" >> /tmp/opencode.log 2>&1
+          timeout -k 30 540 opencode run --auto --model "${{ inputs.model || 'opencode/beam-free' }}" "${{ github.event.inputs.task }}" >> /tmp/opencode.log 2>&1
           OPENCODE_EXIT=$?
           touch /tmp/opencode.done
           wait $WATCHER_PID
